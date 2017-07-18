@@ -1,16 +1,14 @@
-var BasicCard = function(ques,ans) {
-	return {
-		front:ques,
-		back:ans
-	};
+var BasicCard = function(front,back) {
+	this.front = front;
+	this.back = back;
 }
 
 module.exports = BasicCard;
 
-var firstPresident = new BasicCard(
+var rightAngle = new BasicCard(
     "What is 90 degree angle?", 
     "A right angle");
 
-console.log(firstPresident.front); 
+console.log(rightAngle.front); 
 
-console.log(firstPresident.back);
+console.log(rightAngle.back);
