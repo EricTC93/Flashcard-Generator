@@ -13,7 +13,7 @@ var clozeCardList = [];
 var cardTypeQues = [{
 	type:"list",
 	message:"What type of card do you want to make?",
-	choices:["Basic","Cloze"],
+	choices:["Basic","Cloze","Exit"],
 	name:"type"
 }];
 
@@ -51,29 +51,70 @@ function createCard(res) {
 			inquirer.prompt(clozeCardGenerator).then(createCloze);
 			break;
 
+		case "Exit":
+			return console.log("Goodbye");
+
 		default:
 			console.log("There was an error\n");
+			inquirer.prompt(cardTypeQues).then(createCard);
+			break;
 	}
 };
 
 function createBasic(res) {
-	basicCardList.push(
-		new BasicCard (
-    	res.front, 
-    	res.back)
-	);
+	if (!res.front || !res.back) {
+		console.log("Requires input\n");
+		return inquirer.prompt(cardTypeQues).then(createCard);
+	}
 
-	console.log(basicCardList);
+	var string = res.front + "-#@-" + res.back + "-#@-";
+	fs.appendFile("basicCardList.txt",string,function(err){
+		if (err) throw err;
+	});
+
+	console.log("Basic card created.\n");
+
+	return inquirer.prompt(cardTypeQues).then(createCard);
+
+	// basicCardList.push(
+	// 	new BasicCard (
+ //    	res.front, 
+ //    	res.back)
+	// );
+
+	// console.log(basicCardList);
 };
 
 function createCloze(res) {
-	clozeCardList.push(
-		new ClozeCard (
-    	res.text, 
-    	res.cloze)
-	);
+	if (!res.text || !res.cloze) {
+		console.log("Requires input\n");
+		return inquirer.prompt(cardTypeQues).then(createCard);
+	}
 
-	console.log(clozeCardList);
+	var testCard = new ClozeCard (
+    	res.text, 
+    	res.cloze);
+
+    if (testCard.valid === false) {
+    	return inquirer.prompt(cardTypeQues).then(createCard);
+    } 
+
+	var string = res.text + "-#@-" + res.cloze + "-#@-";
+	fs.appendFile("clozeCardList.txt",string,function(err){
+		if (err) throw err;
+	});
+
+	console.log("Cloze card created.\n");
+
+	return inquirer.prompt(cardTypeQues).then(createCard);
+
+	// clozeCardList.push(
+		// new ClozeCard (
+  //   	res.text, 
+  //   	res.cloze)
+	// );
+
+	// console.log(clozeCardList);
 };
 
 // var rightAngle = new BasicCard(
