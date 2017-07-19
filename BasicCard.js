@@ -5,10 +5,10 @@ var BasicCard = function(front,back) {
 
 module.exports = BasicCard;
 
-var rightAngle = new BasicCard(
-    "What is 90 degree angle?", 
-    "A right angle");
+// var rightAngle = new BasicCard(
+//     "What is 90 degree angle?", 
+//     "A right angle");
 
-console.log(rightAngle.front); 
+// console.log(rightAngle.front); 
 
-console.log(rightAngle.back);
+// console.log(rightAngle.back);
