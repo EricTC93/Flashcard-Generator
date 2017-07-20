@@ -4,6 +4,10 @@ var inquirer = require("inquirer");
 var fs = require("fs");
 
 var cardList = [];
+var basicCardList = [];
+var clozeCardList = [];
+addBasicCards();
+addClozeCards();
 
 var chooseCards = {
 	type:"list",
@@ -12,28 +16,36 @@ var chooseCards = {
 	name:"type"
 }
 
-inquirer.prompt(chooseCards).then(createCardList);
+var answerCard = {
+	type:"input",
+	message:"A: ",
+	name:"answer"
+}
 
-function createCardList(res) {
+inquirer.prompt(chooseCards).then(selectCardList);
+
+function selectCardList(res) {
+	console.log("Try to answer the following questions:\n");
+
 	switch(res.type) {
 		case "Basic":
-			addBasicCards();
+			useCard(basicCardList,0);
 			break;
 
 		case "Cloze":
-			addClozeCards();
+			useCard(clozeCardList,0);
 			break;
 
 		case "Both":
-			addBasicCards();
-			addClozeCards();
+			useCard(cardList,0);
 			break;
 
 		default:
 			console.log("There was an error\n");
-			
+			return;
 			break;
 	}
+
 }
 
 function addBasicCards() {
@@ -44,11 +56,14 @@ function addBasicCards() {
 		for(var i=0;i<fileStingArr.length;i+=2) {
 			if(fileStingArr[i]) {
 				cardList.push(new BasicCard(fileStingArr[i],fileStingArr[i+1]));
+				basicCardList.push(new BasicCard(fileStingArr[i],fileStingArr[i+1]));
 				// i++;
 			}
 		}
+		shuffleElements(basicCardList);
 		shuffleElements(cardList);
-		console.log(cardList);
+		// console.log(cardList);
+
 	});
 }
 
@@ -60,17 +75,42 @@ function addClozeCards() {
 		for(var i=0;i<fileStingArr.length;i+=2) {
 			if(fileStingArr[i]) {
 				cardList.push(new ClozeCard(fileStingArr[i],fileStingArr[i+1]));
+				clozeCardList.push(new ClozeCard(fileStingArr[i],fileStingArr[i+1]));
 				// i++;
 			}
 		}
+		shuffleElements(clozeCardList);
 		shuffleElements(cardList);
-		console.log(cardList);
+		// console.log(cardList);
 	});
 }
 
-function useCards() {
-	
+function useCard(cards,i) {
+	if (i === cards.length) {
+		console.log("No more cards \nGoodbye");
+		return;
+	}
+
+	cards[i].showFront();
+
+	inquirer.prompt(answerCard).then(function(res) {
+		cards[i].showBack();
+		if(cards[i].answer === res.answer) {
+			console.log("That's correct\n");
+		}
+
+		else {
+			console.log("That's incorrect\n");
+		}
+
+		return useCard(cards,++i);
+	});
+
 }
+
+// function checkBack(res) {
+	
+// }
 
 
 // Shuffles the elements of an array

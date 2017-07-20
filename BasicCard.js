@@ -1,13 +1,14 @@
 var BasicCard = function(front,back) {
 	this.front = front;
 	this.back = back;
+	this.answer = this.back;
 
 	this.showFront = function() {
-		console.log(this.front+"\n");
+		console.log(this.front);
 	};
 
 	this.showBack = function() {
-		console.log(this.back+"\n");
+		console.log(this.back);
 	};
 }
 

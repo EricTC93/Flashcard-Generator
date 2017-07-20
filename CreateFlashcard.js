@@ -126,7 +126,7 @@ function createCloze(res) {
 // console.log(rightAngle.back);
 
 // var supplementary = new ClozeCard(
-//     "If two angles are supplementary then there total is 180 degrees", 
+//     "If two angles are supplementary then their total is 180 degrees", 
 //     "supplementary");
 
 // console.log(supplementary.cloze); 
