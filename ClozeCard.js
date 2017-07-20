@@ -16,6 +16,14 @@ var ClozeCard = function(text,cloze) {
 	}
 
 	this.valid = true;
+
+	this.showFront = function() {
+		console.log(this.partial+"\n");
+	};
+
+	this.showBack = function() {
+		console.log(this.cloze+"\n");
+	};
 }
 
 module.exports = ClozeCard;
