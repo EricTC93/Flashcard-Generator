@@ -9,8 +9,8 @@ var clozeCardList = [];
 addBasicCards();
 addClozeCards();
 
-var correct = 0;
-var incorrect = 0;
+var correctCount = 0;
+var incorrectCount = 0;
 
 var chooseCards = {
 	type:"list",
@@ -95,7 +95,10 @@ function addClozeCards() {
 
 function useCard(cards,i) {
 	if (i === cards.length) {
-		console.log("No more cards \nGoodbye");
+		console.log("No more cards");
+		console.log("You got " + correctCount + " right and " + incorrectCount + " wrong");
+		console.log("No more cards");
+		console.log("Goodbye");
 		return;
 	}
 
@@ -104,10 +107,12 @@ function useCard(cards,i) {
 	inquirer.prompt(answerCard).then(function(res) {
 		cards[i].showBack();
 		if(cards[i].answer.toLowerCase() === res.answer.toLowerCase()) {
+			correctCount++;
 			console.log("That's correct\n");
 		}
 
 		else {
+			incorrectCount++;
 			console.log("That's incorrect\n");
 		}
 
