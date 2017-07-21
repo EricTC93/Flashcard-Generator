@@ -9,6 +9,9 @@ var clozeCardList = [];
 addBasicCards();
 addClozeCards();
 
+var correct = 0;
+var incorrect = 0;
+
 var chooseCards = {
 	type:"list",
 	message:"Which cards would you like to use?",
@@ -25,18 +28,23 @@ var answerCard = {
 inquirer.prompt(chooseCards).then(selectCardList);
 
 function selectCardList(res) {
-	console.log("Try to answer the following questions:\n");
+	console.log("Try to answer the following questions:");
 
 	switch(res.type) {
 		case "Basic":
+			console.log("There are " + basicCardList.length + " basic cards\n");
 			useCard(basicCardList,0);
 			break;
 
 		case "Cloze":
+			console.log("There are " + clozeCardList.length + " cloze cards\n");
 			useCard(clozeCardList,0);
 			break;
 
 		case "Both":
+			console.log("There are " + basicCardList.length + " basic cards");
+			console.log("There are " + clozeCardList.length + " cloze cards");
+			console.log(cardList.length + " cards in total\n");
 			useCard(cardList,0);
 			break;
 
@@ -95,7 +103,7 @@ function useCard(cards,i) {
 
 	inquirer.prompt(answerCard).then(function(res) {
 		cards[i].showBack();
-		if(cards[i].answer === res.answer) {
+		if(cards[i].answer.toLowerCase() === res.answer.toLowerCase()) {
 			console.log("That's correct\n");
 		}
 
