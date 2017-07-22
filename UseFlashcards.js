@@ -1,16 +1,10 @@
+// Shows the cards that are stored in the text files to the user
+
+// Requires the necessary files
 var BasicCard = require("./BasicCard.js");
 var ClozeCard = require("./ClozeCard.js");
 var inquirer = require("inquirer");
 var fs = require("fs");
-
-var cardList = [];
-var basicCardList = [];
-var clozeCardList = [];
-addBasicCards();
-addClozeCards();
-
-var correctCount = 0;
-var incorrectCount = 0;
 
 var chooseCards = {
 	type:"list",
@@ -25,27 +19,35 @@ var answerCard = {
 	name:"answer"
 }
 
-inquirer.prompt(chooseCards).then(selectCardList);
+var correctCount = 0;
+var incorrectCount = 0;
 
+// Creates card list
+var cardList = [];
+var basicCardList = [];
+var clozeCardList = [];
+addBasicCards(); // addBasicCards -> addClozeCards -> inquirer.prompt(chooseCards).then(selectCardList)
+
+// Selects which type of cards the user wants
 function selectCardList(res) {
 	console.log("Try to answer the following questions:");
 
 	switch(res.type) {
 		case "Basic":
 			console.log("There are " + basicCardList.length + " basic cards\n");
-			useCard(basicCardList,0);
+			useCards(basicCardList,0);
 			break;
 
 		case "Cloze":
 			console.log("There are " + clozeCardList.length + " cloze cards\n");
-			useCard(clozeCardList,0);
+			useCards(clozeCardList,0);
 			break;
 
 		case "Both":
 			console.log("There are " + basicCardList.length + " basic cards");
 			console.log("There are " + clozeCardList.length + " cloze cards");
 			console.log(cardList.length + " cards in total\n");
-			useCard(cardList,0);
+			useCards(cardList,0);
 			break;
 
 		default:
@@ -56,54 +58,57 @@ function selectCardList(res) {
 
 }
 
+// Adds all stored basic cards into an array
 function addBasicCards() {
 	fs.readFile("basicCardList.txt","utf8",function(err,data) {
-		// console.log(data);
 		var fileStingArr = data.split("-#@-");
-		// console.log(fileStingArr);
+
 		for(var i=0;i<fileStingArr.length;i+=2) {
 			if(fileStingArr[i]) {
 				cardList.push(new BasicCard(fileStingArr[i],fileStingArr[i+1]));
 				basicCardList.push(new BasicCard(fileStingArr[i],fileStingArr[i+1]));
-				// i++;
 			}
 		}
 		shuffleElements(basicCardList);
 		shuffleElements(cardList);
-		// console.log(cardList);
+
+		return addClozeCards();
 
 	});
 }
 
+// Adds all stored cloze cards into an array
 function addClozeCards() {
 	fs.readFile("clozeCardList.txt","utf8",function(err,data) {
-		// console.log(data);
+
 		var fileStingArr = data.split("-#@-");
-		// console.log(fileStingArr);
+
 		for(var i=0;i<fileStingArr.length;i+=2) {
 			if(fileStingArr[i]) {
 				cardList.push(new ClozeCard(fileStingArr[i],fileStingArr[i+1]));
 				clozeCardList.push(new ClozeCard(fileStingArr[i],fileStingArr[i+1]));
-				// i++;
 			}
 		}
 		shuffleElements(clozeCardList);
 		shuffleElements(cardList);
-		// console.log(cardList);
+
+		return inquirer.prompt(chooseCards).then(selectCardList);
 	});
 }
 
-function useCard(cards,i) {
+// Shows the front of the card to the user and asks for an answer
+// Loops through cards(array) using i(index)
+function useCards(cards,i) {
 	if (i === cards.length) {
 		console.log("No more cards");
 		console.log("You got " + correctCount + " right and " + incorrectCount + " wrong");
-		console.log("No more cards");
 		console.log("Goodbye");
 		return;
 	}
 
 	cards[i].showFront();
 
+	// Prompts user to enter an answer
 	inquirer.prompt(answerCard).then(function(res) {
 		cards[i].showBack();
 		if(cards[i].answer.toLowerCase() === res.answer.toLowerCase()) {
@@ -116,15 +121,10 @@ function useCard(cards,i) {
 			console.log("That's incorrect\n");
 		}
 
-		return useCard(cards,++i);
+		return useCards(cards,++i);
 	});
 
 }
-
-// function checkBack(res) {
-	
-// }
-
 
 // Shuffles the elements of an array
 function shuffleElements (arr) {

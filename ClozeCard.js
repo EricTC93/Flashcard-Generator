@@ -1,3 +1,6 @@
+// Constructor CLozeCard
+
+// A cloze flashcard has a fill in the blank question on the front and the answer on the back
 var ClozeCard = function(text,cloze) {
 	this.fullText = text;
 	this.cloze = cloze;
@@ -9,7 +12,7 @@ var ClozeCard = function(text,cloze) {
 
 	this.partial = text.replace(cloze,blank);
 
-
+	// Test the validity of the cloze card
 	if (this.partial === text) {
 		console.log("This can't be a Cloze Card.\n");
 		this.valid = false;
@@ -40,4 +43,13 @@ module.exports = ClozeCard;
 
 // console.log(supplementary.fullText);
 
+
 // var brokenCloze = new ClozeCard("This doesn't work", "oops");
+
+// console.log(brokenCloze.cloze);
+
+// console.log(brokenCloze.partial);
+
+// console.log(brokenCloze.fullText);
+
+// console.log(brokenCloze.valid);

@@ -1,3 +1,6 @@
+// Constructor BasicCard
+
+// A basic flashcard has the question on the front and the answer on the back
 var BasicCard = function(front,back) {
 	this.front = front;
 	this.back = back;

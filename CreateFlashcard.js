@@ -1,14 +1,11 @@
+// Let's user create a card using text input
+
+// Requires the necessary files
 var BasicCard = require("./BasicCard.js");
 var ClozeCard = require("./ClozeCard.js");
 var inquirer = require("inquirer");
 var fs = require("fs");
 
-var basicCardList = [];
-var clozeCardList = [];
-
-// var nodeArr = process.argv;
-
-// var type = nodeArr[2];
 
 var cardTypeQues = [{
 	type:"list",
@@ -37,10 +34,11 @@ var clozeCardGenerator = [{
 	name:"cloze"
 }];
 
-inquirer.prompt(cardTypeQues).then(createCard);
+// Ask the user what type of card the user wants to make
+inquirer.prompt(cardTypeQues).then(cardGenerator);
 
-function createCard(res) {
-	// console.log(res);
+// Selects which card to create based on user input
+function cardGenerator(res) {
 
 	switch(res.type) {
 		case "Basic":
@@ -56,17 +54,20 @@ function createCard(res) {
 
 		default:
 			console.log("There was an error\n");
-			inquirer.prompt(cardTypeQues).then(createCard);
+			inquirer.prompt(cardTypeQues).then(cardGenerator);
 			break;
 	}
 };
 
+// Creates a basic card from user input
 function createBasic(res) {
 	if (!res.front || !res.back) {
-		console.log("Requires input\n");
-		return inquirer.prompt(cardTypeQues).then(createCard);
+		console.log("Requires input");
+		console.log("Basic card couldn't be created\n");
+		return inquirer.prompt(cardTypeQues).then(cardGenerator);
 	}
 
+	// Appends basic card string to a file
 	var string = res.front + "-#@-" + res.back + "-#@-";
 	fs.appendFile("basicCardList.txt",string,function(err){
 		if (err) throw err;
@@ -74,31 +75,30 @@ function createBasic(res) {
 
 	console.log("Basic card created.\n");
 
-	return inquirer.prompt(cardTypeQues).then(createCard);
+	return inquirer.prompt(cardTypeQues).then(cardGenerator);
 
-	// basicCardList.push(
-	// 	new BasicCard (
- //    	res.front, 
- //    	res.back)
-	// );
-
-	// console.log(basicCardList);
 };
 
+// Creates a cloze card from user input
 function createCloze(res) {
 	if (!res.text || !res.cloze) {
-		console.log("Requires input\n");
-		return inquirer.prompt(cardTypeQues).then(createCard);
+		console.log("Requires input");
+		console.log("Cloze card couldn't be created\n");
+		return inquirer.prompt(cardTypeQues).then(cardGenerator);
 	}
 
+	// Tests the clozde cards validity
 	var testCard = new ClozeCard (
     	res.text, 
     	res.cloze);
 
     if (testCard.valid === false) {
-    	return inquirer.prompt(cardTypeQues).then(createCard);
+    	console.log("Input is not valid");
+    	console.log("Cloze card couldn't be created\n");
+    	return inquirer.prompt(cardTypeQues).then(cardGenerator);
     } 
 
+    // Appends cloze card string to a file
 	var string = res.text + "-#@-" + res.cloze + "-#@-";
 	fs.appendFile("clozeCardList.txt",string,function(err){
 		if (err) throw err;
@@ -106,35 +106,5 @@ function createCloze(res) {
 
 	console.log("Cloze card created.\n");
 
-	return inquirer.prompt(cardTypeQues).then(createCard);
-
-	// clozeCardList.push(
-		// new ClozeCard (
-  //   	res.text, 
-  //   	res.cloze)
-	// );
-
-	// console.log(clozeCardList);
+	return inquirer.prompt(cardTypeQues).then(cardGenerator);
 };
-
-// var rightAngle = new BasicCard(
-//     "What is 90 degree angle?", 
-//     "A right angle");
-
-// console.log(rightAngle.front); 
-
-// console.log(rightAngle.back);
-
-// var supplementary = new ClozeCard(
-//     "If two angles are supplementary then their total is 180 degrees", 
-//     "supplementary");
-
-// console.log(supplementary.cloze); 
-
-// console.log(supplementary.partial);
-
-// console.log(supplementary.fullText);
-
-// var brokenCloze = new ClozeCard("This doesn't work", "oops");
-
-// console.log(brokenCloze.valid);
