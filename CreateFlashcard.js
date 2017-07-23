@@ -6,7 +6,7 @@ var ClozeCard = require("./ClozeCard.js");
 var inquirer = require("inquirer");
 var fs = require("fs");
 
-
+// Question List
 var cardTypeQues = [{
 	type:"list",
 	message:"What type of card do you want to make?",
