@@ -22,14 +22,15 @@ var ClozeCard = function(text,cloze) {
 	this.answer = this.cloze;
 	this.valid = true;
 
-	this.showFront = function() {
-		console.log(this.partial);
-	};
-
-	this.showBack = function() {
-		console.log(this.cloze);
-	};
 }
+
+ClozeCard.prototype.showFront = function() {
+  console.log(this.partial);
+};
+
+ClozeCard.prototype.showBack = function() {
+  console.log(this.cloze);
+};
 
 module.exports = ClozeCard;
 
